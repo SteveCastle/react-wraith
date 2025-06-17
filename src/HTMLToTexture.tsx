@@ -4,6 +4,13 @@ import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera } from "@react-three/drei";
 import * as THREE from "three";
 import html2canvas from "html2canvas";
+import {
+  Bloom,
+  EffectComposer,
+  Glitch,
+  Noise,
+} from "@react-three/postprocessing";
+import { BlendFunction, GlitchMode } from "postprocessing";
 
 // Debounce function
 const debounce = <F extends (...args: unknown[]) => void>(
@@ -141,6 +148,13 @@ const HTMLToTexture: React.FC<HTMLToTextureProps> = ({ children }) => {
             <planeGeometry args={[size.width, size.height]} />
             <meshBasicMaterial map={texture} transparent />
           </mesh>
+          <EffectComposer>
+            <Bloom />
+            <Noise
+              premultiply // enables or disables noise premultiplication
+              blendFunction={BlendFunction.ADD} // blend mode
+            />
+          </EffectComposer>
         </Canvas>
       )}
     </div>
