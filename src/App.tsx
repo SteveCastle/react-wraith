@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { useState, type FC } from "react";
 import Shade from "./Shade";
 import "./App.css";
 
@@ -19,7 +19,9 @@ const LibraryIntro: FC = () => (
   </div>
 );
 
-const WithShadeExample: FC = () => (
+const WithShadeExample: FC<{ interactiveText: string }> = ({
+  interactiveText,
+}) => (
   <div className="feature-card">
     <h3 className="feature-card-title">✨ With Shade Effects</h3>
     <p className="feature-card-description">
@@ -32,11 +34,28 @@ const WithShadeExample: FC = () => (
       <br />• Automatic HTML-to-texture conversion
       <br />• Performance-optimized rendering
       <br />• Seamless React integration
+      <br />
+      <br />
+      <strong>State from other card:</strong>
+      <br />
+      <span
+        style={{
+          display: "inline-block",
+          marginTop: "0.5rem",
+          padding: "0.5rem",
+          background: "rgba(0,0,0,0.2)",
+          borderRadius: "0.25rem",
+        }}
+      >
+        {interactiveText}
+      </span>
     </div>
   </div>
 );
 
-const InteractiveDemo: FC = () => (
+const InteractiveDemo: FC<{
+  setInteractiveText: (text: string) => void;
+}> = ({ setInteractiveText }) => (
   <div
     className="feature-card"
     style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}
@@ -47,6 +66,49 @@ const InteractiveDemo: FC = () => (
       dynamic content all work seamlessly.
     </p>
     <div className="feature-card-features">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          const text = formData.get("text-input") as string;
+          setInteractiveText(text || "This text is reactive! ✨");
+          e.currentTarget.reset();
+        }}
+        style={{
+          display: "flex",
+          gap: "0.5rem",
+          alignItems: "center",
+          marginBottom: "1rem",
+        }}
+      >
+        <input
+          name="text-input"
+          type="text"
+          placeholder="Type to update other card..."
+          style={{
+            background: "rgba(255,255,255,0.2)",
+            border: "2px solid rgba(255,255,255,0.3)",
+            padding: "0.75rem",
+            borderRadius: "0.5rem",
+            color: "white",
+            flex: 1,
+          }}
+        />
+        <button
+          type="submit"
+          style={{
+            background: "rgba(255,255,255,0.2)",
+            border: "2px solid rgba(255,255,255,0.3)",
+            padding: "0.75rem 1rem",
+            borderRadius: "0.5rem",
+            color: "white",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
+          Update
+        </button>
+      </form>
       <button
         style={{
           background: "rgba(255,255,255,0.2)",
@@ -56,12 +118,19 @@ const InteractiveDemo: FC = () => (
           color: "white",
           cursor: "pointer",
           fontWeight: "bold",
-          marginTop: "0.5rem",
         }}
         onClick={() => alert("Shade works with interactive content!")}
       >
         Click me! 🚀
       </button>
+      <img
+        src="./image.jpg"
+        className="image"
+        onLoad={(el) => {
+          //on load set the height of this img element to the actual height
+          el.currentTarget.style.height = `${el.currentTarget.offsetHeight}px`;
+        }}
+      />
     </div>
   </div>
 );
@@ -122,17 +191,17 @@ const FeatureComparison: FC = () => (
   </div>
 );
 
-const CallToAction: FC = () => (
-  <button className="glowing-button">Start Using Shade ✨</button>
-);
-
 // Main App component
 const App: FC = () => {
+  const [interactiveText, setInteractiveText] = useState(
+    "This text is reactive! ✨"
+  );
+
   return (
     <div className="app-container">
       {/* Header */}
       <header className="app-header">
-        <h1 className="app-title">HTML to Shader</h1>
+        <h1 className="app-title">React Shade</h1>
         <p className="app-subtitle">
           Wrap any component with Shade to add shader effects.
         </p>
@@ -141,17 +210,16 @@ const App: FC = () => {
       {/* Demo Content */}
       <div className="content-grid">
         <LibraryIntro />
-
+        <div className="column">
+          <Shade>
+            <WithShadeExample interactiveText={interactiveText} />
+          </Shade>
+          <Shade>
+            <CodeExample />
+          </Shade>
+        </div>
         <Shade>
-          <WithShadeExample />
-        </Shade>
-
-        <Shade>
-          <InteractiveDemo />
-        </Shade>
-
-        <Shade>
-          <CodeExample />
+          <InteractiveDemo setInteractiveText={setInteractiveText} />
         </Shade>
 
         <FeatureComparison />
@@ -161,8 +229,7 @@ const App: FC = () => {
       <div className="instructions-panel">
         <h4 className="instructions-title">🚀 Quick Start:</h4>
         <code className="instructions-code">
-          {`import Shade from './Shade';
-
+          {`import Shade from 'shade-react';
 <Shade>
   <YourComponent />
 </Shade>`}

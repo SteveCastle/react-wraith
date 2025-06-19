@@ -51,9 +51,6 @@ const Shade: React.FC<ShadeProps> = ({ children }) => {
         const newTexture = new THREE.CanvasTexture(canvas);
         newTexture.needsUpdate = true;
         setTexture(newTexture);
-        if (contentRef.current) {
-          contentRef.current.style.opacity = "0";
-        }
         isCapturingRef.current = false; // Reset flag after capture is complete
       });
     }
@@ -92,25 +89,12 @@ const Shade: React.FC<ShadeProps> = ({ children }) => {
     const targetNode = contentRef.current;
     if (!targetNode) return;
 
-    const debouncedCapture = debounce(() => {
-      // Prevent recursive calls during capture process
-      if (isCapturingRef.current) return;
-
-      isCapturingRef.current = true;
-      if (contentRef.current) {
-        contentRef.current.style.opacity = "1";
-      }
-      updateSize();
-      captureAndSetTexture();
-    }, 300); // 300ms debounce delay
-
-    // Initial capture
-    debouncedCapture();
+    updateSize();
+    captureAndSetTexture();
 
     const observer = new MutationObserver(() => {
-      // Ignore mutations that occur during our own capture process
-      if (isCapturingRef.current) return;
-      //   debouncedCapture();
+      updateSize();
+      captureAndSetTexture();
     });
 
     observer.observe(targetNode, {
@@ -138,7 +122,7 @@ const Shade: React.FC<ShadeProps> = ({ children }) => {
         position: "relative",
         width: size.width ? `${size.width}px` : "auto",
         height: size.height ? `${size.height}px` : "auto",
-        pointerEvents: "none",
+        zIndex: 0,
       }}
     >
       <div ref={contentRef}>{children}</div>
@@ -151,6 +135,8 @@ const Shade: React.FC<ShadeProps> = ({ children }) => {
             left: 0,
             width: "100%",
             height: "100%",
+            pointerEvents: "none",
+            zIndex: 1000,
           }}
         >
           <OrthographicCamera
