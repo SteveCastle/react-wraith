@@ -33,11 +33,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Upload artifact
+      - name: Upload static site content
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: './pages'
+          # Publish only the pages/ sub-directory
+          path: pages # or './pages'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
