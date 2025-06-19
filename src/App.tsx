@@ -1,31 +1,32 @@
 import { useState, type FC } from "react";
-import Shade from "./Shade";
+import Wraith from "./Wraith";
 import "./App.css";
+import { BlendFunction } from "postprocessing";
 
-// Demo components to showcase Shade library
+// Demo components to showcase Wraith library
 const LibraryIntro: FC = () => (
   <div className="welcome-card">
-    <h2 className="welcome-card-title">📦 Shade Library</h2>
+    <h2 className="welcome-card-title">📦 Wraith Library</h2>
     <p className="welcome-card-description">
       A React component that adds stunning shader-based glow effects to any HTML
       content using Three.js and React Three Fiber.
     </p>
     <ul className="welcome-card-list">
       <li>🎨 HTML to 3D texture conversion</li>
-      <li>✨ Real-time glow effects</li>
+      <li>✨ Real-time post processing shader effects</li>
       <li>🔥 Zero configuration needed</li>
       <li>⚡ Automatic content detection</li>
     </ul>
   </div>
 );
 
-const WithShadeExample: FC<{ interactiveText: string }> = ({
+const WithWraithExample: FC<{ interactiveText: string }> = ({
   interactiveText,
 }) => (
   <div className="feature-card">
-    <h3 className="feature-card-title">✨ With Shade Effects</h3>
+    <h3 className="feature-card-title">✨ With Wraith Effects</h3>
     <p className="feature-card-description">
-      This card is wrapped with the Shade component and gets beautiful glow
+      This card is wrapped with the Wraith component and gets beautiful glow
       effects automatically applied.
     </p>
     <div className="feature-card-features">
@@ -119,7 +120,7 @@ const InteractiveDemo: FC<{
           cursor: "pointer",
           fontWeight: "bold",
         }}
-        onClick={() => alert("Shade works with interactive content!")}
+        onClick={() => alert("Wraith works with interactive content!")}
       >
         Click me! 🚀
       </button>
@@ -147,7 +148,7 @@ const CodeExample: FC = () => (
       💻 Simple Integration
     </h3>
     <p className="feature-card-description" style={{ color: "#555" }}>
-      Just wrap any component with Shade - it's that simple!
+      Just wrap any component with Wraith - it's that simple!
     </p>
     <div
       className="feature-card-features"
@@ -160,34 +161,124 @@ const CodeExample: FC = () => (
           fontFamily: "monospace",
         }}
       >
-        {`<Shade>
+        {`<Wraith>
   <YourComponent />
-</Shade>`}
+</Wraith>`}
+      </code>
+    </div>
+  </div>
+);
+
+// NEW COMPONENT: demonstrates configuration options
+const ConfigOptionsExample: FC = () => (
+  <div
+    className="feature-card"
+    style={{
+      background: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
+      color: "#333",
+    }}
+  >
+    <h3 className="feature-card-title" style={{ color: "#333" }}>
+      ⚙️ Configuration Options
+    </h3>
+    <p className="feature-card-description" style={{ color: "#555" }}>
+      Fine-tune the visual effects by passing an <code>effects</code> prop to
+      Wraith.
+    </p>
+    <div
+      className="feature-card-features"
+      style={{ background: "rgba(0,0,0,0.1)", color: "#333" }}
+    >
+      <code
+        style={{
+          fontSize: "0.9rem",
+          display: "block",
+          fontFamily: "monospace",
+        }}
+      >
+        {`<Wraith
+  effects={{
+    bloom: { enabled: true, intensity: 1.2 },
+    pixelation: { enabled: false },
+    chromaticAberration: {
+      enabled: true,
+      offset: new Vector2(0.005, 0.005),
+    },
+  }}
+>
+  <YourComponent />
+</Wraith>`}
       </code>
     </div>
   </div>
 );
 
 const FeatureComparison: FC = () => (
-  <div className="regular-content-card">
-    <h3>🔍 Without Shade Effects</h3>
-    <p>
-      This is regular HTML content without any Shade wrapper. Notice the
-      difference in visual impact compared to the glowing components above.
-    </p>
-    <p>
-      <strong>Standard features:</strong>
-      <br />• Regular CSS styling
-      <br />• No post-processing effects
-      <br />• Standard DOM rendering
-    </p>
-    <p style={{ fontSize: "0.9rem", opacity: 0.7, marginTop: "1rem" }}>
-      💡{" "}
-      <em>
-        Tip: Compare this card with the ones above to see Shade's visual
-        enhancement in action!
-      </em>
-    </p>
+  <div className="regular-content-card author-card">
+    <div className="author-info">
+      <Wraith
+        effects={{
+          pixelation: { enabled: true, granularity: 4 },
+          noise: {
+            enabled: true,
+            opacity: 0.9,
+            blendFunction: BlendFunction.ADD,
+          },
+        }}
+      >
+        <img src="me.jpg" alt="Steve Castle avatar" className="author-avatar" />
+      </Wraith>
+
+      <div className="author-text">
+        <h3 className="author-heading">👋 About the Author</h3>
+        <p>
+          Hi, I'm <strong>Steve Castle</strong> — thanks for checking out this
+          demo!
+        </p>
+        <ul className="author-links">
+          <li>
+            📂{" "}
+            <a
+              href="https://github.com/placeholder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Project GitHub Repository
+            </a>
+          </li>
+          <li>
+            🎥{" "}
+            <a
+              href="https://youtube.com/placeholder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Watch the YouTube Tutorial
+            </a>
+          </li>
+          <li>
+            📝{" "}
+            <a
+              href="https://codesandbox.io/placeholder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Try the CodeSandbox Demo
+            </a>
+          </li>
+          <li>
+            ☕{" "}
+            <a
+              href="https://patreon.com/placeholder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Support me on Patreon
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 );
 
@@ -201,9 +292,23 @@ const App: FC = () => {
     <div className="app-container">
       {/* Header */}
       <header className="app-header">
-        <h1 className="app-title">React Shade</h1>
+        <Wraith
+          effects={{
+            pixelation: {
+              enabled: false,
+            },
+            chromaticAberration: {
+              enabled: true,
+            },
+            glitch: {
+              enabled: true,
+            },
+          }}
+        >
+          <h1 className="app-title">React Wraith</h1>
+        </Wraith>
         <p className="app-subtitle">
-          Wrap any component with Shade to add shader effects.
+          Wrap any component with Wraith to add shader effects.
         </p>
       </header>
 
@@ -211,16 +316,38 @@ const App: FC = () => {
       <div className="content-grid">
         <LibraryIntro />
         <div className="column">
-          <Shade>
-            <WithShadeExample interactiveText={interactiveText} />
-          </Shade>
-          <Shade>
+          <Wraith>
+            <WithWraithExample interactiveText={interactiveText} />
+          </Wraith>
+          <Wraith>
             <CodeExample />
-          </Shade>
+          </Wraith>
+          <Wraith
+            effects={{
+              bloom: { enabled: true, intensity: 0.7 },
+              pixelation: { enabled: true, granularity: 1 },
+              noise: {
+                enabled: true,
+                opacity: 0.5,
+                blendFunction: BlendFunction.OVERLAY,
+              },
+              chromaticAberration: {
+                enabled: false,
+              },
+            }}
+          >
+            <ConfigOptionsExample />
+          </Wraith>
         </div>
-        <Shade>
+        <Wraith
+          effects={{
+            bloom: {
+              enabled: false,
+            },
+          }}
+        >
           <InteractiveDemo setInteractiveText={setInteractiveText} />
-        </Shade>
+        </Wraith>
 
         <FeatureComparison />
       </div>
@@ -229,13 +356,13 @@ const App: FC = () => {
       <div className="instructions-panel">
         <h4 className="instructions-title">🚀 Quick Start:</h4>
         <code className="instructions-code">
-          {`import Shade from 'shade-react';
-<Shade>
+          {`import Wraith from 'wraith-react';
+<Wraith>
   <YourComponent />
-</Shade>`}
+</Wraith>`}
         </code>
         <p style={{ fontSize: "0.8rem", marginTop: "0.5rem", opacity: 0.8 }}>
-          That's it! Shade automatically handles HTML-to-texture conversion and
+          That's it! Wraith automatically handles HTML-to-texture conversion and
           applies beautiful glow effects.
         </p>
       </div>

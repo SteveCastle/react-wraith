@@ -24,7 +24,7 @@
 .app-title {
   font-size: clamp(2.5rem, 5vw, 4rem);
   margin: 0 0 1.5rem 0;
-  background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
+  /* background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00); */
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -365,4 +365,51 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+}
+
+/* Author Card Styles */
+.author-card {
+  text-align: left;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.author-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.author-heading {
+  margin: 0 0 0.5rem 0;
+  color: #ff6b6b;
+  font-size: 1.5rem;
+}
+
+.author-links {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+  line-height: 1.8;
+}
+
+.author-links a {
+  color: #61dafb;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.author-links a:hover {
+  color: #00ffff;
+  text-decoration: underline;
 }
