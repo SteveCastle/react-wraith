@@ -29,8 +29,8 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --out-dir dist",
     "clean": "rimraf dist",
     "lint": "eslint .",
-    "build:demo": "vite build",
-    "preview:demo": "vite preview",
+    "build:demo": "vite build --outDir pages",
+    "preview:demo": "vite preview --outDir pages",
     "prepare": "npm run build"
   },
   "peerDependencies": {
