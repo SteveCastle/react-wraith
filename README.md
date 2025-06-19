@@ -4,7 +4,6 @@ A lightweight React component that turns any DOM subtree into a Three.js-powered
 
 ![NPM version](https://img.shields.io/npm/v/react-wraith?color=cb3837&logo=npm&style=flat-square)
 ![License](https://img.shields.io/github/license/stevecastle/react-wraith?style=flat-square)
-![CI](https://img.shields.io/github/actions/workflow/status/stevecastle/react-wraith/ci.yml?branch=main&style=flat-square)
 
 ---
 
@@ -20,6 +19,8 @@ A lightweight React component that turns any DOM subtree into a Three.js-powered
 
 ## 🚀 Demo
 
+👉 **Live Demo:** [https://stevecastle.github.io/react-wraith/](https://stevecastle.github.io/react-wraith/)
+
 Clone the repo and run the embedded demo:
 
 ```bash
@@ -32,23 +33,24 @@ pnpm dev       # launches Vite demo at http://localhost:5173
 ## 📦 Installation
 
 ```bash
-npm install wraith
+npm install react-wraith
 # └── peer deps (you probably already have these in a R3F project)
-npm install three react react-dom @react-three/fiber @react-three/drei @react-three/postprocessing postprocessing
-```
+npm install react react-dom
 
 ```
-yarn add wraith three react react-dom @react-three/fiber @react-three/drei @react-three/postprocessing postprocessing
-```
 
-> `react`, `react-dom`, `three`, `@react-three/*` & `postprocessing` are **peer dependencies** – they must be present in the consumer project but are not bundled with Wraith.
+yarn add react-wraith three react react-dom
+
+````
+
+> `react`, `react-dom`,  are **peer dependencies** – they must be present in the consumer project but are not bundled with Wraith.
 
 ---
 
 ## 🛠 Usage
 
 ```tsx
-import { Wraith } from "wraith";
+import { Wraith } from "react-wraith";
 
 export default function Card() {
   return (
@@ -63,7 +65,7 @@ export default function Card() {
     </Wraith>
   );
 }
-```
+````
 
 ### Customising effects
 
