@@ -2,9 +2,9 @@
 
 A lightweight React component that turns any DOM subtree into a Three.js-powered canvas with optional post-processing effects like bloom, noise, glitch, pixelation, and more.
 
-![NPM version](https://img.shields.io/npm/v/wraith?color=cb3837&logo=npm&style=flat-square)
-![License](https://img.shields.io/github/license/your-user/wraith?style=flat-square)
-![CI](https://img.shields.io/github/actions/workflow/status/your-user/wraith/ci.yml?branch=main&style=flat-square)
+![NPM version](https://img.shields.io/npm/v/react-wraith?color=cb3837&logo=npm&style=flat-square)
+![License](https://img.shields.io/github/license/stevecastle/react-wraith?style=flat-square)
+![CI](https://img.shields.io/github/actions/workflow/status/stevecastle/react-wraith/ci.yml?branch=main&style=flat-square)
 
 ---
 
@@ -20,8 +20,7 @@ A lightweight React component that turns any DOM subtree into a Three.js-powered
 
 ## 🚀 Demo
 
-A live playground is available at **https://your-demo-url**.  
-Or clone the repo and run the embedded demo:
+Clone the repo and run the embedded demo:
 
 ```bash
 pnpm install   # or npm/yarn
