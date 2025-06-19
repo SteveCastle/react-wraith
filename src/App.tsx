@@ -1,205 +1,176 @@
-import React from "react";
 import type { FC } from "react";
-import HTMLToTexture from "./HTMLToTexture";
+import Shade from "./Shade";
+import "./App.css";
 
-// Sample components to demonstrate usage
-const WelcomeCard: FC = () => (
-  <div
-    style={{
-      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      padding: "2rem",
-      borderRadius: "1rem",
-      color: "white",
-      boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
-      margin: "1rem",
-    }}
-  >
-    <h2 style={{ margin: "0 0 1rem 0", fontSize: "2rem" }}>
-      Welcome to ThreeCanvas
-    </h2>
-    <p style={{ margin: "0 0 1rem 0", opacity: 0.9 }}>
-      HTML content rendered with glow effects using @react-three/fiber!
+// Demo components to showcase Shade library
+const LibraryIntro: FC = () => (
+  <div className="welcome-card">
+    <h2 className="welcome-card-title">📦 Shade Library</h2>
+    <p className="welcome-card-description">
+      A React component that adds stunning shader-based glow effects to any HTML
+      content using Three.js and React Three Fiber.
     </p>
-    <ul style={{ margin: 0, paddingLeft: "1.5rem" }}>
-      <li>React Three Fiber ✨</li>
-      <li>Custom Shaders 🔥</li>
-      <li>HTML2Canvas 🎨</li>
+    <ul className="welcome-card-list">
+      <li>🎨 HTML to 3D texture conversion</li>
+      <li>✨ Real-time glow effects</li>
+      <li>🔥 Zero configuration needed</li>
+      <li>⚡ Automatic content detection</li>
     </ul>
   </div>
 );
 
-const FeatureCard: FC = () => (
-  <div
-    style={{
-      background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-      padding: "2rem",
-      borderRadius: "1rem",
-      color: "white",
-      boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
-      margin: "1rem",
-      maxWidth: "400px",
-    }}
-  >
-    <h3 style={{ margin: "0 0 1rem 0" }}>Interactive Features</h3>
-    <p style={{ margin: "0 0 1rem 0", opacity: 0.9 }}>
-      This card shows how any React component can have glow effects applied.
+const WithShadeExample: FC = () => (
+  <div className="feature-card">
+    <h3 className="feature-card-title">✨ With Shade Effects</h3>
+    <p className="feature-card-description">
+      This card is wrapped with the Shade component and gets beautiful glow
+      effects automatically applied.
     </p>
-    <div
-      style={{
-        background: "rgba(255,255,255,0.2)",
-        padding: "1rem",
-        borderRadius: "0.5rem",
-        marginTop: "1rem",
-      }}
-    >
-      <strong>✨ Features:</strong>
-      <br />• Real-time HTML to texture conversion
-      <br />• Automatic content change detection
-      <br />• Customizable glow positioning
+    <div className="feature-card-features">
+      <strong>🎯 What you get:</strong>
+      <br />• Bloom post-processing effects
+      <br />• Automatic HTML-to-texture conversion
+      <br />• Performance-optimized rendering
+      <br />• Seamless React integration
     </div>
   </div>
 );
 
-const GlowingButton: FC = () => (
-  <button
-    style={{
-      background: "linear-gradient(45deg, #FF6B6B, #4ECDC4)",
-      border: "none",
-      padding: "1rem 2rem",
-      borderRadius: "2rem",
-      color: "white",
-      fontSize: "1.2rem",
-      fontWeight: "bold",
-      cursor: "pointer",
-      boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
-      transition: "transform 0.2s",
-      margin: "1rem",
-    }}
-    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+const InteractiveDemo: FC = () => (
+  <div
+    className="feature-card"
+    style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}
   >
-    Click Me! ✨
-  </button>
+    <h3 className="feature-card-title">🎮 Interactive Elements</h3>
+    <p className="feature-card-description">
+      Even interactive content gets the glow treatment! Buttons, forms, and
+      dynamic content all work seamlessly.
+    </p>
+    <div className="feature-card-features">
+      <button
+        style={{
+          background: "rgba(255,255,255,0.2)",
+          border: "2px solid rgba(255,255,255,0.3)",
+          padding: "0.75rem 1.5rem",
+          borderRadius: "0.5rem",
+          color: "white",
+          cursor: "pointer",
+          fontWeight: "bold",
+          marginTop: "0.5rem",
+        }}
+        onClick={() => alert("Shade works with interactive content!")}
+      >
+        Click me! 🚀
+      </button>
+    </div>
+  </div>
+);
+
+const CodeExample: FC = () => (
+  <div
+    className="feature-card"
+    style={{
+      background: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
+      color: "#333",
+    }}
+  >
+    <h3 className="feature-card-title" style={{ color: "#333" }}>
+      💻 Simple Integration
+    </h3>
+    <p className="feature-card-description" style={{ color: "#555" }}>
+      Just wrap any component with Shade - it's that simple!
+    </p>
+    <div
+      className="feature-card-features"
+      style={{ background: "rgba(0,0,0,0.1)", color: "#333" }}
+    >
+      <code
+        style={{
+          fontSize: "0.9rem",
+          display: "block",
+          fontFamily: "monospace",
+        }}
+      >
+        {`<Shade>
+  <YourComponent />
+</Shade>`}
+      </code>
+    </div>
+  </div>
+);
+
+const FeatureComparison: FC = () => (
+  <div className="regular-content-card">
+    <h3>🔍 Without Shade Effects</h3>
+    <p>
+      This is regular HTML content without any Shade wrapper. Notice the
+      difference in visual impact compared to the glowing components above.
+    </p>
+    <p>
+      <strong>Standard features:</strong>
+      <br />• Regular CSS styling
+      <br />• No post-processing effects
+      <br />• Standard DOM rendering
+    </p>
+    <p style={{ fontSize: "0.9rem", opacity: 0.7, marginTop: "1rem" }}>
+      💡{" "}
+      <em>
+        Tip: Compare this card with the ones above to see Shade's visual
+        enhancement in action!
+      </em>
+    </p>
+  </div>
+);
+
+const CallToAction: FC = () => (
+  <button className="glowing-button">Start Using Shade ✨</button>
 );
 
 // Main App component
 const App: FC = () => {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background:
-          "radial-gradient(circle at 50% 50%, #0f0f23 0%, #000000 100%)",
-        color: "white",
-        fontFamily: "Arial, sans-serif",
-        padding: "2rem",
-        position: "relative",
-      }}
-    >
+    <div className="app-container">
       {/* Header */}
-      <header
-        style={{
-          textAlign: "center",
-          marginBottom: "3rem",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "3rem",
-            margin: "0 0 1rem 0",
-            background: "linear-gradient(45deg, #00ffff, #ff00ff)",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          HTML to 3D Glow Effects
-        </h1>
-        <p style={{ fontSize: "1.2rem", opacity: 0.8, margin: 0 }}>
-          Wrap any component with HTMLToTexture to add shader-based glow effects
+      <header className="app-header">
+        <h1 className="app-title">HTML to Shader</h1>
+        <p className="app-subtitle">
+          Wrap any component with Shade to add shader effects.
         </p>
       </header>
 
-      {/* Content Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "2rem",
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
-        {/* Card with glow effect */}
-        <HTMLToTexture>
-          <WelcomeCard />
-        </HTMLToTexture>
+      {/* Demo Content */}
+      <div className="content-grid">
+        <LibraryIntro />
 
-        {/* Another card with different glow position */}
-        <HTMLToTexture>
-          <FeatureCard />
-        </HTMLToTexture>
+        <Shade>
+          <WithShadeExample />
+        </Shade>
 
-        {/* Regular content without glow */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.1)",
-            padding: "2rem",
-            borderRadius: "1rem",
-            border: "1px solid rgba(255,255,255,0.2)",
-            margin: "1rem",
-          }}
-        >
-          <h3>Regular Content</h3>
-          <p>This content doesn't have glow effects applied.</p>
-          <p>
-            Only components wrapped with HTMLToTexture get the 3D shader
-            treatment.
-          </p>
-        </div>
+        <Shade>
+          <InteractiveDemo />
+        </Shade>
+
+        <Shade>
+          <CodeExample />
+        </Shade>
+
+        <FeatureComparison />
       </div>
 
-      {/* Interactive elements */}
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "3rem",
-        }}
-      >
-        <GlowingButton />
-      </div>
+      {/* Usage Instructions */}
+      <div className="instructions-panel">
+        <h4 className="instructions-title">🚀 Quick Start:</h4>
+        <code className="instructions-code">
+          {`import Shade from './Shade';
 
-      {/* Instructions */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          background: "rgba(0,0,0,0.8)",
-          padding: "1rem",
-          borderRadius: "0.5rem",
-          fontSize: "0.9rem",
-          maxWidth: "300px",
-          backdropFilter: "blur(10px)",
-        }}
-      >
-        <h4 style={{ margin: "0 0 0.5rem 0", color: "#00ffff" }}>Usage:</h4>
-        <code
-          style={{
-            display: "block",
-            background: "rgba(255,255,255,0.1)",
-            padding: "0.5rem",
-            borderRadius: "0.25rem",
-            fontSize: "0.8rem",
-          }}
-        >
-          {`<HTMLToTexture
-  glowPosition={[x, y, z]}
-  glowScale={[x, y, z]}
->
+<Shade>
   <YourComponent />
-</HTMLToTexture>`}
+</Shade>`}
         </code>
+        <p style={{ fontSize: "0.8rem", marginTop: "0.5rem", opacity: 0.8 }}>
+          That's it! Shade automatically handles HTML-to-texture conversion and
+          applies beautiful glow effects.
+        </p>
       </div>
     </div>
   );
