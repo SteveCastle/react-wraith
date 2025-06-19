@@ -31,8 +31,7 @@
     "lint": "eslint .",
     "build:demo": "vite build",
     "preview:demo": "vite preview",
-    "prepare": "npm run build",
-    "publish": "npm publish --access public"
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
