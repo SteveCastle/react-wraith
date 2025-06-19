@@ -7,21 +7,6 @@ import html2canvas from "html2canvas";
 import { Bloom, EffectComposer, Noise } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 
-// Debounce function
-const debounce = <F extends (...args: unknown[]) => void>(
-  func: F,
-  waitFor: number
-) => {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
-
-  return (...args: Parameters<F>): void => {
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-    timeout = setTimeout(() => func(...args), waitFor);
-  };
-};
-
 interface ShadeProps {
   children: ReactNode;
 }
@@ -125,7 +110,9 @@ const Shade: React.FC<ShadeProps> = ({ children }) => {
         zIndex: 0,
       }}
     >
-      <div ref={contentRef}>{children}</div>
+      <div ref={contentRef} style={{ userSelect: "none" }}>
+        {children}
+      </div>
       {texture && size.width > 0 && size.height > 0 && (
         <Canvas
           gl={{ preserveDrawingBuffer: true }}
