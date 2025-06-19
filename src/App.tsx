@@ -132,6 +132,14 @@ const InteractiveDemo: FC<{
           el.currentTarget.style.height = `${el.currentTarget.offsetHeight}px`;
         }}
       />
+      <img
+        src="./image2.jpg"
+        className="image"
+        onLoad={(el) => {
+          //on load set the height of this img element to the actual height
+          el.currentTarget.style.height = `${el.currentTarget.offsetHeight}px`;
+        }}
+      />
     </div>
   </div>
 );
