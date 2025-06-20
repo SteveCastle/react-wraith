@@ -247,7 +247,7 @@ const FeatureComparison: FC = () => (
           <li>
             📂{" "}
             <a
-              href="https://github.com/placeholder"
+              href="https://github.com/stevecastle/react-wraith"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -257,7 +257,7 @@ const FeatureComparison: FC = () => (
           <li>
             🎥{" "}
             <a
-              href="https://youtube.com/placeholder"
+              href="https://www.youtube.com/@CodeWorkshops"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -364,7 +364,7 @@ const App: FC = () => {
       <div className="instructions-panel">
         <h4 className="instructions-title">🚀 Quick Start:</h4>
         <code className="instructions-code">
-          {`import Wraith from 'wraith-react';
+          {`import Wraith from 'react-wraith';
 <Wraith>
   <YourComponent />
 </Wraith>`}

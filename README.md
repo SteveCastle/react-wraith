@@ -21,12 +21,33 @@ A lightweight React component that turns any DOM subtree into a Three.js-powered
 
 👉 **Live Demo:** [https://stevecastle.github.io/react-wraith/](https://stevecastle.github.io/react-wraith/)
 
-Clone the repo and run the embedded demo:
+### Quick&nbsp;Start
 
-```bash
-pnpm install   # or npm/yarn
-pnpm dev       # launches Vite demo at http://localhost:5173
-```
+Get up and running in three steps:
+
+1. **Install** the package (plus Three.js + R3F helpers if you don't already have them):
+
+   ```bash
+   npm install react-wraith three @react-three/fiber @react-three/drei @react-three/postprocessing
+   ```
+
+2. **Wrap** any JSX with the `Wraith` component:
+
+   ```tsx
+   import { Wraith } from "react-wraith";
+
+   export default function Example() {
+     return (
+       <Wraith>
+         <div style={{ padding: 32, background: "#111", color: "#fff" }}>
+           ⚡️ Hello from Wraith!
+         </div>
+       </Wraith>
+     );
+   }
+   ```
+
+3. **Run** your dev server (`npm run dev`, `vite`, or similar) and enjoy the WebGL-powered version of your DOM node.
 
 ---
 
