@@ -83,7 +83,7 @@ const effects: EffectsConfig = {
 <Wraith effects={effects}>…</Wraith>;
 ```
 
-Every sub-object mirrors the props of its corresponding `@react-three/postprocessing` component. See the [TypeScript types](./src/Wraith.tsx) for the full reference.
+Every sub-object corresponds to a popular post-processing pass. See the API section below for the full list of options and their defaults.
 
 ---
 
@@ -93,6 +93,88 @@ Every sub-object mirrors the props of its corresponding `@react-three/postproces
 | ---------- | ---------------------- | ------- | ----------------------------------------------------------- |
 | `effects`  | `EffectsConfig`        | –       | Optional map enabling & configuring post-processing passes. |
 | `children` | `ReactNode` (required) | –       | The DOM subtree to capture/render.                          |
+
+### EffectsConfig
+
+The `effects` prop is a plain object where each key enables and configures a specific post-processing pass. The sections below outline what each effect does and which options are available. Any option you omit falls back to the default shown.
+
+> **Enum helpers** – The `KernelSize`, `BlendFunction`, and `GlitchMode` enums are all re-exported from the underlying [`postprocessing`](https://github.com/pmndrs/postprocessing) package, so you can import them directly from your app.
+
+#### Bloom – bright-area glow
+
+| Option                      | Type         | Default            | Description                                         |
+| --------------------------- | ------------ | ------------------ | --------------------------------------------------- |
+| `enabled`                   | `boolean`    | `true`             | Turns the bloom pass on/off.                        |
+| `intensity`                 | `number`     | `1`                | Strength of the glow.                               |
+| `kernelSize`                | `KernelSize` | `KernelSize.LARGE` | Convolution blur kernel size.                       |
+| `luminanceThreshold`        | `number`     | `0.9`              | Only pixels brighter than this contribute to bloom. |
+| `luminanceSmoothing`        | `number`     | `0.025`            | Softens the luminance threshold edge.               |
+| `mipmapBlur`                | `boolean`    | `false`            | Activates mip-map blur for smoother fall-off.       |
+| `resolutionX / resolutionY` | `number`     | –                  | Override internal render target resolution.         |
+
+#### Noise – film grain overlay
+
+| Option          | Type            | Default             | Description                                             |
+| --------------- | --------------- | ------------------- | ------------------------------------------------------- |
+| `enabled`       | `boolean`       | `true`              | Toggles the noise pass.                                 |
+| `premultiply`   | `boolean`       | `true`              | Multiply noise by the scene colour.                     |
+| `blendFunction` | `BlendFunction` | `BlendFunction.ADD` | How the noise is composited.                            |
+| `opacity`       | `number`        | –                   | Manual alpha if you want less than full noise strength. |
+
+#### DotScreen – retro CRT dots
+
+| Option          | Type            | Default                | Description                             |
+| --------------- | --------------- | ---------------------- | --------------------------------------- |
+| `enabled`       | `boolean`       | `false`                | Enable the dot-screen shader.           |
+| `blendFunction` | `BlendFunction` | `BlendFunction.NORMAL` | Composition mode.                       |
+| `angle`         | `number`        | `Math.PI / 2`          | Rotation of the dot pattern.            |
+| `scale`         | `number`        | `1`                    | Distance between dots (lower = denser). |
+
+#### Glitch – intermittent RGB shift & distortion
+
+| Option     | Type               | Default               | Description                            |
+| ---------- | ------------------ | --------------------- | -------------------------------------- |
+| `enabled`  | `boolean`          | `false`               | Master toggle.                         |
+| `delay`    | `[number, number]` | `[1.5, 3.5]`          | Min/max seconds between glitch bursts. |
+| `duration` | `[number, number]` | `[0.6, 1.0]`          | Min/max seconds a burst lasts.         |
+| `strength` | `[number, number]` | `[0.3, 1.0]`          | Distortion strength range.             |
+| `mode`     | `GlitchMode`       | `GlitchMode.SPORADIC` | Continuous vs sporadic vs …            |
+| `active`   | `boolean`          | `true`                | Whether the pass is currently active.  |
+| `ratio`    | `number`           | `0.85`                | Portion of the frame affected.         |
+
+#### Pixelation – chunky low-res look
+
+| Option          | Type            | Default                | Description                        |
+| --------------- | --------------- | ---------------------- | ---------------------------------- |
+| `enabled`       | `boolean`       | `false`                | Toggle pixelation.                 |
+| `blendFunction` | `BlendFunction` | `BlendFunction.NORMAL` | Composition mode.                  |
+| `granularity`   | `number`        | `2`                    | Pixel size in screen-space pixels. |
+
+#### Scanline – horizontal line overlay
+
+| Option          | Type            | Default                 | Description                              |
+| --------------- | --------------- | ----------------------- | ---------------------------------------- |
+| `enabled`       | `boolean`       | `false`                 | Enable the scanline overlay.             |
+| `blendFunction` | `BlendFunction` | `BlendFunction.OVERLAY` | Composition mode.                        |
+| `density`       | `number`        | `1`                     | Spacing between lines (higher = denser). |
+| `opacity`       | `number`        | `1`                     | Opacity of the lines.                    |
+
+#### Chromatic Aberration – RGB channel offset
+
+| Option          | Type               | Default                | Description            |
+| --------------- | ------------------ | ---------------------- | ---------------------- |
+| `enabled`       | `boolean`          | `false`                | Activate the effect.   |
+| `blendFunction` | `BlendFunction`    | `BlendFunction.NORMAL` | Composition mode.      |
+| `offset`        | `[number, number]` | `[0.01, 0.01]`         | Per-channel UV offset. |
+
+#### CustomShader – bring your own fragment shader
+
+| Option           | Type                      | Default                | Description                                     |
+| ---------------- | ------------------------- | ---------------------- | ----------------------------------------------- |
+| `enabled`        | `boolean`                 | `false`                | Toggle the pass.                                |
+| `fragmentShader` | `string`                  | –                      | Your GLSL fragment shader source. **Required.** |
+| `uniforms`       | `Record<string, unknown>` | –                      | Extra uniforms passed to the material.          |
+| `blendFunction`  | `BlendFunction`           | `BlendFunction.NORMAL` | How to composite with the scene.                |
 
 ---
 
