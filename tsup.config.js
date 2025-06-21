@@ -8,13 +8,5 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: [
-    "react",
-    "react-dom",
-    "three",
-    "@react-three/fiber",
-    "@react-three/drei",
-    "@react-three/postprocessing",
-    "postprocessing",
-  ],
+  external: ["react", "react-dom"],
 });

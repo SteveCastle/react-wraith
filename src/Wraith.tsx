@@ -331,7 +331,12 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
         height: size.height ? `${size.height}px` : "auto",
       }}
     >
-      <div ref={contentRef} style={{ userSelect: "none" }}>
+      <div
+        ref={contentRef}
+        style={{
+          userSelect: "none",
+        }}
+      >
         {children}
       </div>
       {texture && size.width > 0 && size.height > 0 && (
