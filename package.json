@@ -1,7 +1,7 @@
 {
   "name": "react-wraith",
   "private": false,
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "React component for capturing DOM nodes into a Three.js canvas with post-processing effects.",
   "author": "Steve Castle",
   "repository": {
@@ -34,8 +34,8 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "dependencies": {
     "html2canvas": "^1.4.1",

@@ -1,6 +1,8 @@
-# React Wraith
+# React Wraith (Alpha)
 
-A lightweight React component that turns any DOM subtree into a Three.js-powered canvas with optional post-processing effects like bloom, noise, glitch, pixelation, and more.
+⚠️ **Alpha Release** - This library is experimental and has some rough edges. Element positioning may be inaccurate in some cases, and content updates are not real-time due to texture re-rendering.
+
+A React component that converts HTML content into Three.js textures and applies configurable shader-based visual effects like bloom, pixelation, glitch, noise, chromatic aberration, and more.
 
 ![NPM version](https://img.shields.io/npm/v/react-wraith?color=cb3837&logo=npm&style=flat-square)
 ![License](https://img.shields.io/github/license/stevecastle/react-wraith?style=flat-square)
@@ -9,11 +11,22 @@ A lightweight React component that turns any DOM subtree into a Three.js-powered
 
 ## ✨ Features
 
-• **One-liner drop-in** – wrap any JSX and instantly get a canvas version rendered on top.  
-• **Zero config defaults** – bloom + noise out of the box.  
-• **Configurable post-processing pipeline** – enable/disable and tweak popular effects (bloom, noise, dot-screen, glitch, pixelation, scanline, chromatic aberration).
-• **DOM margin support** – keeps the Three.js plane perfectly aligned with your original layout.  
-• **TypeScript first** – full typings for all effect options.
+• **HTML to 3D texture conversion** – automatically captures DOM content as WebGL textures  
+• **Multiple shader effects** – bloom, pixelation, glitch, noise, chromatic aberration, and more  
+• **Configurable post-processing pipeline** – enable/disable and customize any effect  
+• **TypeScript first** – full typings for all effect options  
+• **Alpha software** – expect positioning quirks and delayed updates
+
+---
+
+## ⚠️ Current Limitations
+
+This is alpha software with known issues:
+
+- **Element positioning** may be slightly off in some layouts
+- **Updates are not real-time** - content changes require texture re-rendering
+- **Interactive elements** work but positioning may be approximate
+- **Performance** is not yet optimized for production use
 
 ---
 
@@ -25,10 +38,10 @@ A lightweight React component that turns any DOM subtree into a Three.js-powered
 
 Get up and running in three steps:
 
-1. **Install** the package (plus Three.js + R3F helpers if you don't already have them):
+1. **Install** the package (only React 19 required as peer dependency):
 
    ```bash
-   npm install react-wraith three @react-three/fiber @react-three/drei @react-three/postprocessing
+   npm install react-wraith
    ```
 
 2. **Wrap** any JSX with the `Wraith` component:
@@ -47,7 +60,7 @@ Get up and running in three steps:
    }
    ```
 
-3. **Run** your dev server (`npm run dev`, `vite`, or similar) and enjoy the WebGL-powered version of your DOM node.
+3. **Run** your dev server and see your content rendered with shader effects.
 
 ---
 
@@ -55,16 +68,13 @@ Get up and running in three steps:
 
 ```bash
 npm install react-wraith
-# └── peer deps (you probably already have these in a R3F project)
-npm install react react-dom
-
 ```
 
-yarn add react-wraith three react react-dom
+```bash
+yarn add react-wraith
+```
 
-````
-
-> `react`, `react-dom`,  are **peer dependencies** – they must be present in the consumer project but are not bundled with Wraith.
+> Only `react ^19.0.0` and `react-dom ^19.0.0` are required as peer dependencies. All other dependencies (Three.js, React Three Fiber, etc.) are bundled with the library.
 
 ---
 
@@ -80,31 +90,35 @@ export default function Card() {
         <h1>Hello ✨</h1>
         <p>
           This content is captured into a WebGL texture and re-rendered with
-          post-processing.
+          configurable shader effects.
         </p>
       </div>
     </Wraith>
   );
 }
-````
+```
 
 ### Customising effects
 
 All effect toggles & options live on the `effects` prop:
 
 ```tsx
-import { Wraith, type EffectsConfig } from "wraith";
+import { Wraith, type EffectsConfig } from "react-wraith";
 
 const effects: EffectsConfig = {
-  bloom: { intensity: 1.5, luminanceThreshold: 0.8 },
+  bloom: { enabled: true, intensity: 1.5, luminanceThreshold: 0.8 },
+  pixelation: { enabled: true, granularity: 4 },
   glitch: { enabled: true, strength: [0.3, 1.0] },
   chromaticAberration: { enabled: true, offset: [0.01, 0.01] },
+  noise: { enabled: true, opacity: 0.3 },
 };
 
-<Wraith effects={effects}>…</Wraith>;
+<Wraith effects={effects}>
+  <YourComponent />
+</Wraith>;
 ```
 
-Every sub-object corresponds to a popular post-processing pass. See the API section below for the full list of options and their defaults.
+Mix and match different effects to create unique visual styles. Each effect can be independently enabled and configured.
 
 ---
 
@@ -121,7 +135,7 @@ The `effects` prop is a plain object where each key enables and configures a spe
 
 > **Enum helpers** – The `KernelSize`, `BlendFunction`, and `GlitchMode` enums are all re-exported from the underlying [`postprocessing`](https://github.com/pmndrs/postprocessing) package, so you can import them directly from your app.
 
-#### Bloom – bright-area glow
+#### Bloom – luminous glow effect
 
 | Option                      | Type         | Default            | Description                                         |
 | --------------------------- | ------------ | ------------------ | --------------------------------------------------- |
@@ -163,7 +177,7 @@ The `effects` prop is a plain object where each key enables and configures a spe
 | `active`   | `boolean`          | `true`                | Whether the pass is currently active.  |
 | `ratio`    | `number`           | `0.85`                | Portion of the frame affected.         |
 
-#### Pixelation – chunky low-res look
+#### Pixelation – retro pixel art look
 
 | Option          | Type            | Default                | Description                        |
 | --------------- | --------------- | ---------------------- | ---------------------------------- |
@@ -221,7 +235,7 @@ pnpm build            # bundle library with tsup
 
 ## 🤝 Contributing
 
-Bug reports and pull requests are welcome!
+Bug reports and pull requests are welcome! This is alpha software, so please report any positioning issues or other bugs you encounter.
 
 1. Fork the repo & create a branch.
 2. Run the demo locally (`pnpm dev`).

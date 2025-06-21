@@ -6,17 +6,34 @@ import { BlendFunction } from "postprocessing";
 // Demo components to showcase Wraith library
 const LibraryIntro: FC = () => (
   <div className="welcome-card">
-    <h2 className="welcome-card-title">📦 Wraith Library</h2>
+    <h2 className="welcome-card-title">📦 Wraith Library (Alpha)</h2>
     <p className="welcome-card-description">
-      A React component that adds stunning shader-based glow effects to any HTML
-      content using Three.js and React Three Fiber.
+      A React component that adds various shader-based visual effects to HTML
+      content using Three.js and React Three Fiber. Currently in alpha with some
+      rough edges.
     </p>
     <ul className="welcome-card-list">
       <li>🎨 HTML to 3D texture conversion</li>
-      <li>✨ Real-time post processing shader effects</li>
-      <li>🔥 Zero configuration needed</li>
-      <li>⚡ Automatic content detection</li>
+      <li>
+        ✨ Multiple post-processing effects (bloom, pixelation, noise, etc.)
+      </li>
+      <li>🔧 Configurable effect parameters</li>
+      <li>⚠️ Alpha software - expect some positioning issues</li>
     </ul>
+    <div
+      style={{
+        marginTop: "1rem",
+        padding: "0.75rem",
+        background: "rgba(255, 196, 0, 0.1)",
+        border: "1px solid rgba(255, 196, 0, 0.3)",
+        borderRadius: "0.5rem",
+        fontSize: "0.9rem",
+      }}
+    >
+      <strong>⚠️ Alpha Notice:</strong> This library is experimental. Element
+      positioning may be inaccurate in some cases, and content updates are not
+      real-time.
+    </div>
   </div>
 );
 
@@ -26,18 +43,20 @@ const WithWraithExample: FC<{ interactiveText: string }> = ({
   <div className="feature-card">
     <h3 className="feature-card-title">✨ With Wraith Effects</h3>
     <p className="feature-card-description">
-      This card is wrapped with the Wraith component and gets beautiful glow
-      effects automatically applied.
+      This card demonstrates the Wraith component with various visual effects
+      applied. Effects include bloom, pixelation, chromatic aberration, and
+      more.
     </p>
     <div className="feature-card-features">
-      <strong>🎯 What you get:</strong>
-      <br />• Bloom post-processing effects
-      <br />• Automatic HTML-to-texture conversion
-      <br />• Performance-optimized rendering
-      <br />• Seamless React integration
+      <strong>🎯 Available Effects:</strong>
+      <br />• Bloom (luminous glow)
+      <br />• Pixelation (retro pixel art)
+      <br />• Chromatic aberration (color fringing)
+      <br />• Glitch effects
+      <br />• Noise overlay
       <br />
       <br />
-      <strong>State from other card:</strong>
+      <strong>State from interactive card:</strong>
       <br />
       <span
         style={{
@@ -50,6 +69,10 @@ const WithWraithExample: FC<{ interactiveText: string }> = ({
       >
         {interactiveText}
       </span>
+      <br />
+      <small style={{ opacity: 0.7, fontSize: "0.8rem" }}>
+        Note: Updates may not be real-time due to texture re-rendering
+      </small>
     </div>
   </div>
 );
@@ -61,10 +84,10 @@ const InteractiveDemo: FC<{
     className="feature-card"
     style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}
   >
-    <h3 className="feature-card-title">🎮 Interactive Elements</h3>
+    <h3 className="feature-card-title">🎮 Interactive Content</h3>
     <p className="feature-card-description">
-      Even interactive content gets the glow treatment! Buttons, forms, and
-      dynamic content all work seamlessly.
+      Interactive elements work with Wraith, though positioning may be slightly
+      off and updates aren't instant due to texture re-rendering.
     </p>
     <div className="feature-card-features">
       <form
@@ -72,7 +95,7 @@ const InteractiveDemo: FC<{
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
           const text = formData.get("text-input") as string;
-          setInteractiveText(text || "This text is reactive! ✨");
+          setInteractiveText(text || "Updated text! ✨");
           e.currentTarget.reset();
         }}
         style={{
@@ -120,9 +143,13 @@ const InteractiveDemo: FC<{
           cursor: "pointer",
           fontWeight: "bold",
         }}
-        onClick={() => alert("Wraith works with interactive content!")}
+        onClick={() =>
+          alert(
+            "Interactive elements work, but positioning may be approximate!"
+          )
+        }
       >
-        Click me! 🚀
+        Test Click 🚀
       </button>
       <img
         src="./image.jpg"
@@ -153,10 +180,11 @@ const CodeExample: FC = () => (
     }}
   >
     <h3 className="feature-card-title" style={{ color: "#333" }}>
-      💻 Simple Integration
+      💻 Basic Usage
     </h3>
     <p className="feature-card-description" style={{ color: "#555" }}>
-      Just wrap any component with Wraith - it's that simple!
+      Wrap any component with Wraith to apply shader effects. Default settings
+      work out of the box.
     </p>
     <div
       className="feature-card-features"
@@ -187,11 +215,11 @@ const ConfigOptionsExample: FC = () => (
     }}
   >
     <h3 className="feature-card-title" style={{ color: "#333" }}>
-      ⚙️ Configuration Options
+      ⚙️ Effect Configuration
     </h3>
     <p className="feature-card-description" style={{ color: "#555" }}>
-      Fine-tune the visual effects by passing an <code>effects</code> prop to
-      Wraith.
+      Customize visual effects using the <code>effects</code> prop. Mix and
+      match different effects.
     </p>
     <div
       className="feature-card-features"
@@ -207,11 +235,13 @@ const ConfigOptionsExample: FC = () => (
         {`<Wraith
   effects={{
     bloom: { enabled: true, intensity: 1.2 },
-    pixelation: { enabled: false },
+    pixelation: { enabled: true, granularity: 4 },
     chromaticAberration: {
       enabled: true,
       offset: new Vector2(0.005, 0.005),
     },
+    glitch: { enabled: false },
+    noise: { enabled: true, opacity: 0.3 }
   }}
 >
   <YourComponent />
@@ -241,7 +271,7 @@ const FeatureComparison: FC = () => (
         <h3 className="author-heading">👋 About the Author</h3>
         <p>
           Hi, I'm <strong>Steve Castle</strong> — thanks for checking out this
-          demo!
+          alpha demo! Please report any issues you encounter.
         </p>
         <ul className="author-links">
           <li>
@@ -281,7 +311,7 @@ const FeatureComparison: FC = () => (
               target="_blank"
               rel="noopener noreferrer"
             >
-              Support me on Patreon
+              Support Development
             </a>
           </li>
         </ul>
@@ -292,9 +322,7 @@ const FeatureComparison: FC = () => (
 
 // Main App component
 const App: FC = () => {
-  const [interactiveText, setInteractiveText] = useState(
-    "This text is reactive! ✨"
-  );
+  const [interactiveText, setInteractiveText] = useState("Updated text! ✨");
 
   return (
     <div className="app-container">
@@ -316,7 +344,7 @@ const App: FC = () => {
           <h1 className="app-title">React Wraith</h1>
         </Wraith>
         <p className="app-subtitle">
-          Wrap any component with Wraith to add shader effects.
+          Apply shader effects to React components (Alpha Release)
         </p>
       </header>
 
@@ -362,7 +390,7 @@ const App: FC = () => {
 
       {/* Usage Instructions */}
       <div className="instructions-panel">
-        <h4 className="instructions-title">🚀 Quick Start:</h4>
+        <h4 className="instructions-title">🚀 Quick Start (Alpha):</h4>
         <code className="instructions-code">
           {`import Wraith from 'react-wraith';
 <Wraith>
@@ -370,8 +398,9 @@ const App: FC = () => {
 </Wraith>`}
         </code>
         <p style={{ fontSize: "0.8rem", marginTop: "0.5rem", opacity: 0.8 }}>
-          That's it! Wraith automatically handles HTML-to-texture conversion and
-          applies beautiful glow effects.
+          Wraith converts HTML to 3D textures and applies configurable shader
+          effects. Currently in alpha - expect some positioning quirks and
+          delayed updates.
         </p>
       </div>
     </div>
