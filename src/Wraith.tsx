@@ -106,110 +106,74 @@ interface WraithProps {
 }
 
 const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
-  const containerRef = useRef<HTMLDivElement>(null); // Ref for the container div
   const contentRef = useRef<HTMLDivElement>(null); // Ref for the div wrapping children
   const isCapturingRef = useRef(false); // Flag to prevent recursive captures
   const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
-  const [dimensions, setDimensions] = useState({
-    width: 0,
-    height: 0,
-    contentWidth: 0,
-    contentHeight: 0,
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [margins, setMargins] = useState({
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   });
 
   const getTargetElement = () =>
     contentRef.current?.children[0] as HTMLElement | undefined;
 
   const captureAndSetTexture = () => {
-    if (isCapturingRef.current) return;
-    isCapturingRef.current = true;
-
     const element = getTargetElement();
     if (element) {
       html2canvas(element, {
         backgroundColor: null,
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-      })
-        .then((canvas) => {
-          const newTexture = new THREE.CanvasTexture(canvas);
-          newTexture.needsUpdate = true;
-          setTexture((prevTexture) => {
-            if (prevTexture) {
-              prevTexture.dispose();
-            }
-            return newTexture;
-          });
-          isCapturingRef.current = false;
-        })
-        .catch((error) => {
-          console.error("html2canvas error:", error);
-          isCapturingRef.current = false;
-        });
-    } else {
-      isCapturingRef.current = false;
+        logging: false, // Disabling logging can help performance
+      }).then((canvas) => {
+        const newTexture = new THREE.CanvasTexture(canvas);
+        newTexture.needsUpdate = true;
+        setTexture(newTexture);
+        isCapturingRef.current = false; // Reset flag after capture is complete
+      });
     }
   };
 
-  const updateDimensions = () => {
+  const updateSize = () => {
     const element = getTargetElement();
-    const container = containerRef.current;
-
-    if (element && container) {
-      // Get the bounding box of the actual content element
-      const elementRect = element.getBoundingClientRect();
-
-      // Calculate dimensions including any margins, borders, etc.
+    if (element) {
       const style = window.getComputedStyle(element);
-      const marginLeft = parseFloat(style.marginLeft) || 0;
-      const marginRight = parseFloat(style.marginRight) || 0;
-      const marginTop = parseFloat(style.marginTop) || 0;
-      const marginBottom = parseFloat(style.marginBottom) || 0;
+      const marginLeft = parseFloat(style.marginLeft);
+      const marginRight = parseFloat(style.marginRight);
+      const marginTop = parseFloat(style.marginTop);
+      const marginBottom = parseFloat(style.marginBottom);
 
-      const totalWidth = elementRect.width + marginLeft + marginRight;
-      const totalHeight = elementRect.height + marginTop + marginBottom;
+      const newWidth = element.offsetWidth + marginLeft + marginRight;
+      const newHeight = element.offsetHeight + marginTop + marginBottom;
 
-      const newDimensions = {
-        width: totalWidth,
-        height: totalHeight,
-        contentWidth: elementRect.width,
-        contentHeight: elementRect.height,
-      };
-
-      // Only update if dimensions have actually changed
-      if (
-        newDimensions.width !== dimensions.width ||
-        newDimensions.height !== dimensions.height ||
-        newDimensions.contentWidth !== dimensions.contentWidth ||
-        newDimensions.contentHeight !== dimensions.contentHeight
-      ) {
-        setDimensions(newDimensions);
+      if (newWidth !== size.width || newHeight !== size.height) {
+        setSize({ width: newWidth, height: newHeight });
       }
+
+      setMargins({
+        left: marginLeft,
+        right: marginRight,
+        top: marginTop,
+        bottom: marginBottom,
+      });
     }
   };
 
   useLayoutEffect(() => {
-    updateDimensions();
+    updateSize();
   }, [children]);
 
   useEffect(() => {
     const targetNode = contentRef.current;
     if (!targetNode) return;
 
-    updateDimensions();
-
-    // Delay texture capture to ensure DOM is fully rendered
-    const timeoutId = setTimeout(() => {
-      captureAndSetTexture();
-    }, 50);
+    updateSize();
+    captureAndSetTexture();
 
     const observer = new MutationObserver(() => {
-      updateDimensions();
-      // Debounce texture capture
-      setTimeout(() => {
-        captureAndSetTexture();
-      }, 100);
+      updateSize();
+      captureAndSetTexture();
     });
 
     observer.observe(targetNode, {
@@ -219,28 +183,17 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
       characterData: true,
     });
 
-    // Also observe resize events
-    const resizeObserver = new ResizeObserver(() => {
-      updateDimensions();
-      setTimeout(() => {
-        captureAndSetTexture();
-      }, 100);
-    });
-
-    const element = getTargetElement();
-    if (element) {
-      resizeObserver.observe(element);
-    }
-
     return () => {
-      clearTimeout(timeoutId);
       observer.disconnect();
-      resizeObserver.disconnect();
       if (texture) {
         texture.dispose();
       }
     };
-  }, [children]);
+  }, [children, size]);
+
+  // Calculate the offset for the mesh to account for margins
+  const meshOffsetX = (margins.right - margins.left) / 2;
+  const meshOffsetY = (margins.top - margins.bottom) / 2;
 
   // ---------------------------------------------------------
   // Post-processing helpers
@@ -368,63 +321,55 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
       />
     );
 
+  //   effectElements.push(<MyCustomEffect param={0.5} />);
+
   return (
     <div
-      ref={containerRef}
       style={{
         position: "relative",
-        width: dimensions.width ? `${dimensions.width}px` : "auto",
-        height: dimensions.height ? `${dimensions.height}px` : "auto",
-        overflow: "hidden", // Ensure no content bleeds outside
+        width: size.width ? `${size.width}px` : "auto",
+        height: size.height ? `${size.height}px` : "auto",
       }}
     >
       <div
         ref={contentRef}
         style={{
           userSelect: "none",
-          position: "relative",
-          zIndex: 1,
         }}
       >
         {children}
       </div>
-      {texture && dimensions.width > 0 && dimensions.height > 0 && (
+      {texture && size.width > 0 && size.height > 0 && (
         <Canvas
-          gl={{
-            preserveDrawingBuffer: true,
-            antialias: true,
-            alpha: true,
-          }}
+          gl={{ preserveDrawingBuffer: true }}
           style={{
             position: "absolute",
             top: 0,
             left: 0,
-            width: `${dimensions.width}px`,
-            height: `${dimensions.height}px`,
+            width: "100%",
+            height: "100%",
             pointerEvents: "none",
-            zIndex: 2,
           }}
         >
           <OrthographicCamera
             makeDefault
             position={[0, 0, 10]}
             zoom={1}
-            top={dimensions.height / 2}
-            bottom={-dimensions.height / 2}
-            left={-dimensions.width / 2}
-            right={dimensions.width / 2}
-            near={0.1}
+            top={size.height / 2}
+            bottom={-size.height / 2}
+            left={-size.width / 2}
+            right={size.width / 2}
+            near={1}
             far={1000}
           />
-          <mesh position={[0, 0, 0]}>
+          <mesh position={[meshOffsetX, -meshOffsetY, 0]}>
             <planeGeometry
-              args={[dimensions.contentWidth, dimensions.contentHeight]}
+              args={[
+                size.width - margins.left - margins.right,
+                size.height - margins.top - margins.bottom,
+              ]}
             />
-            <meshBasicMaterial
-              map={texture}
-              transparent
-              side={THREE.DoubleSide}
-            />
+            <meshBasicMaterial map={texture} transparent />
           </mesh>
           <EffectComposer>{effectElements}</EffectComposer>
         </Canvas>
