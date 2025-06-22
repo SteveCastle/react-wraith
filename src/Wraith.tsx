@@ -152,6 +152,53 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
     }
   };
 
+  const waitForContentReady = async (): Promise<void> => {
+    const element = getTargetElement();
+    if (!element) return;
+
+    // Wait for images to load
+    const images = Array.from(element.querySelectorAll("img"));
+    const imagePromises = images.map((img) => {
+      if (img.complete) return Promise.resolve();
+      return new Promise<void>((resolve) => {
+        img.addEventListener("load", () => resolve(), { once: true });
+        img.addEventListener("error", () => resolve(), { once: true });
+      });
+    });
+
+    // Wait for fonts to load (if supported)
+    const fontPromise = document.fonts
+      ? document.fonts.ready
+      : Promise.resolve();
+
+    // Wait for all content to be ready
+    await Promise.all([...imagePromises, fontPromise]);
+
+    // Additional frame delay to ensure layout is complete
+    return new Promise<void>((resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+  };
+
+  const captureWithRetry = async (maxRetries = 3, delay = 200) => {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        await waitForContentReady();
+        captureAndSetTexture();
+        break;
+      } catch (error) {
+        console.warn(`Texture capture attempt ${attempt + 1} failed:`, error);
+        if (attempt < maxRetries - 1) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, delay * (attempt + 1))
+          );
+        }
+      }
+    }
+  };
+
   const updateDimensions = () => {
     const element = getTargetElement();
     const container = containerRef.current;
@@ -199,16 +246,19 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
 
     updateDimensions();
 
-    // Delay texture capture to ensure DOM is fully rendered
-    const timeoutId = setTimeout(() => {
-      captureAndSetTexture();
-    }, 50);
+    // Use improved capture method with retry logic
+    let mounted = true;
+    captureWithRetry().then(() => {
+      if (!mounted) return; // Component was unmounted
+    });
 
     const observer = new MutationObserver(() => {
       updateDimensions();
-      // Debounce texture capture
+      // Debounced texture capture for updates
       setTimeout(() => {
-        captureAndSetTexture();
+        if (mounted) {
+          captureAndSetTexture();
+        }
       }, 100);
     });
 
@@ -223,7 +273,9 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
     const resizeObserver = new ResizeObserver(() => {
       updateDimensions();
       setTimeout(() => {
-        captureAndSetTexture();
+        if (mounted) {
+          captureAndSetTexture();
+        }
       }, 100);
     });
 
@@ -233,7 +285,7 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
     }
 
     return () => {
-      clearTimeout(timeoutId);
+      mounted = false;
       observer.disconnect();
       resizeObserver.disconnect();
       if (texture) {
@@ -241,6 +293,20 @@ const Wraith: React.FC<WraithProps> = ({ children, effects }) => {
       }
     };
   }, [children]);
+
+  // Fallback effect: retry texture capture if no texture is set after initial mount
+  useEffect(() => {
+    if (!texture) {
+      const fallbackTimer = setTimeout(() => {
+        if (!texture && !isCapturingRef.current) {
+          console.log("Wraith: Retrying texture capture as fallback");
+          captureWithRetry(2, 500); // More aggressive retry for fallback
+        }
+      }, 1000); // Wait 1 second before fallback
+
+      return () => clearTimeout(fallbackTimer);
+    }
+  }, [texture]);
 
   // ---------------------------------------------------------
   // Post-processing helpers
